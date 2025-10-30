@@ -2,7 +2,10 @@ version: "3"
 
 services:
   namenode:
-    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    build:
+      context: ./namenode
+      dockerfile: Dockerfile
+    image: hadoop-namenode
     container_name: namenode
     restart: no
     ports:
@@ -16,7 +19,10 @@ services:
       - ./hadoop.env
 
   datanode:
-    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    build:
+      context: ./datanode
+      dockerfile: Dockerfile
+    image: hadoop-datanode
     container_name: datanode
     restart: no
     volumes:
@@ -25,10 +31,12 @@ services:
       SERVICE_PRECONDITION: "namenode:9870"
     env_file:
       - ./hadoop.env
-
-    
+  
   datanode2:
-    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    build:
+      context: ./datanode
+      dockerfile: Dockerfile
+    image: hadoop-datanode
     container_name: datanode2
     restart: no
     volumes:
@@ -37,9 +45,12 @@ services:
       SERVICE_PRECONDITION: "namenode:9870"
     env_file:
       - ./hadoop.env
-  
+
   resourcemanager:
-    image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.2.1-java8
+    build:
+      context: ./resourcemanager
+      dockerfile: Dockerfile
+    image: hadoop-resourcemanager
     container_name: resourcemanager
     restart: no
     environment:
@@ -48,16 +59,22 @@ services:
       - ./hadoop.env
 
   nodemanager1:
-    image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8
+    build:
+      context: ./nodemanager
+      dockerfile: Dockerfile
+    image: hadoop-nodemanager
     container_name: nodemanager
     restart: no
     environment:
       SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 datanode2:9864 resourcemanager:8088"
     env_file:
       - ./hadoop.env
-  
+
   historyserver:
-    image: bde2020/hadoop-historyserver:2.0.0-hadoop3.2.1-java8
+    build:
+      context: ./historyserver
+      dockerfile: Dockerfile
+    image: hadoop-historyserver
     container_name: historyserver
     restart: no
     environment:
@@ -66,7 +83,7 @@ services:
       - hadoop_historyserver:/hadoop/yarn/timeline
     env_file:
       - ./hadoop.env
-  
+
 volumes:
   hadoop_namenode:
   hadoop_datanode:
